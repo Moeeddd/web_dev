@@ -1,0 +1,194 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg-primary: #020b1a;
+  --bg-secondary: #0a1628;
+  --bg-panel: rgba(10, 22, 40, 0.85);
+  --bg-glass: rgba(6, 182, 212, 0.05);
+  --border-dim: rgba(6, 182, 212, 0.15);
+  --border-glow: rgba(6, 182, 212, 0.4);
+  --text-primary: #e2e8f0;
+  --text-secondary: #94a3b8;
+  --accent: #06b6d4;
+  --accent-glow: rgba(6, 182, 212, 0.6);
+  --danger: #ef4444;
+  --warning: #f59e0b;
+  --success: #10b981;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: 'Inter', system-ui, sans-serif;
+  overflow: hidden;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(6, 182, 212, 0.05);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(6, 182, 212, 0.3);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(6, 182, 212, 0.5);
+}
+
+/* Glass morphism panels */
+@layer components {
+  .glass-panel {
+    @apply bg-navy-950/80 backdrop-blur-md border border-cyan-500/15 rounded-lg;
+  }
+
+  .glass-panel-hover {
+    @apply glass-panel transition-all duration-300 hover:border-cyan-500/30 hover:shadow-lg hover:shadow-cyan-500/5;
+  }
+
+  .glow-border {
+    @apply border border-cyan-500/30 shadow-[0_0_15px_rgba(6,182,212,0.15)];
+  }
+
+  .glow-text {
+    @apply text-cyan-400 drop-shadow-[0_0_8px_rgba(6,182,212,0.6)];
+  }
+
+  .status-badge {
+    @apply inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold tracking-wide;
+  }
+
+  .btn-primary {
+    @apply px-4 py-2 bg-cyan-600 hover:bg-cyan-500 text-white rounded-lg font-medium transition-all duration-200 
+           shadow-lg shadow-cyan-500/20 hover:shadow-cyan-500/40 active:scale-95;
+  }
+
+  .btn-danger {
+    @apply px-4 py-2 bg-red-600 hover:bg-red-500 text-white rounded-lg font-medium transition-all duration-200 
+           shadow-lg shadow-red-500/20 hover:shadow-red-500/40 active:scale-95;
+  }
+
+  .btn-ghost {
+    @apply px-4 py-2 bg-transparent hover:bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 
+           rounded-lg font-medium transition-all duration-200;
+  }
+
+  .input-field {
+    @apply w-full px-3 py-2 bg-navy-900/60 border border-cyan-500/20 rounded-lg text-gray-200 
+           placeholder:text-gray-500 focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/30
+           transition-all duration-200;
+  }
+}
+
+/* Map overrides */
+.leaflet-container {
+  background: #020b1a !important;
+  font-family: 'Inter', sans-serif !important;
+}
+
+.leaflet-tile-pane {
+  filter: brightness(0.6) contrast(1.2) saturate(0.5) hue-rotate(180deg);
+}
+
+.leaflet-control-zoom a {
+  background: rgba(10, 22, 40, 0.9) !important;
+  color: #06b6d4 !important;
+  border-color: rgba(6, 182, 212, 0.3) !important;
+}
+
+.leaflet-control-attribution {
+  background: rgba(10, 22, 40, 0.7) !important;
+  color: rgba(148, 163, 184, 0.5) !important;
+  font-size: 9px !important;
+}
+
+.leaflet-popup-content-wrapper {
+  background: rgba(10, 22, 40, 0.95) !important;
+  border: 1px solid rgba(6, 182, 212, 0.3) !important;
+  border-radius: 12px !important;
+  color: #e2e8f0 !important;
+  box-shadow: 0 0 30px rgba(6, 182, 212, 0.2) !important;
+}
+
+.leaflet-popup-tip {
+  background: rgba(10, 22, 40, 0.95) !important;
+  border: 1px solid rgba(6, 182, 212, 0.3) !important;
+}
+
+.leaflet-popup-close-button {
+  color: #06b6d4 !important;
+}
+
+/* Ship marker animations */
+@keyframes ship-pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.3); opacity: 0.7; }
+}
+
+@keyframes alert-ring {
+  0% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(2.5); opacity: 0; }
+}
+
+.ship-marker-normal {
+  filter: drop-shadow(0 0 6px rgba(6, 182, 212, 0.8));
+}
+
+.ship-marker-warning {
+  filter: drop-shadow(0 0 8px rgba(245, 158, 11, 0.8));
+  animation: ship-pulse 2s infinite;
+}
+
+.ship-marker-danger {
+  filter: drop-shadow(0 0 10px rgba(239, 68, 68, 0.9));
+  animation: ship-pulse 1s infinite;
+}
+
+/* Restricted zone animation */
+@keyframes zone-pulse {
+  0%, 100% { opacity: 0.15; }
+  50% { opacity: 0.35; }
+}
+
+/* Alert notification entry */
+@keyframes alert-slide-in {
+  0% { transform: translateX(100%); opacity: 0; }
+  100% { transform: translateX(0); opacity: 1; }
+}
+
+.alert-enter {
+  animation: alert-slide-in 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Ambient background effect */
+.ambient-bg {
+  background: 
+    radial-gradient(ellipse at 20% 50%, rgba(6, 182, 212, 0.03) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, rgba(30, 74, 138, 0.05) 0%, transparent 50%),
+    radial-gradient(ellipse at 40% 80%, rgba(6, 182, 212, 0.02) 0%, transparent 50%),
+    var(--bg-primary);
+}
+
+/* Grid overlay effect */
+.grid-overlay {
+  background-image: 
+    linear-gradient(rgba(6, 182, 212, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(6, 182, 212, 0.03) 1px, transparent 1px);
+  background-size: 50px 50px;
+}

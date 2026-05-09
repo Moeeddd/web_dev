@@ -1,0 +1,142 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             String       @id @default(uuid())
+  username       String       @unique
+  passwordHash   String
+  role           String       // 'command' | 'captain'
+  assignedShipId String?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  directives     Directive[]
+  alerts         Alert[]      @relation("AcknowledgedAlerts")
+}
+
+model Ship {
+  id          String        @id @default(uuid())
+  shipId      String        @unique
+  name        String
+  lat         Float
+  lng         Float
+  speed       Float
+  heading     Float
+  destination String
+  fuel        Float
+  cargo       String
+  status      String        @default("normal")
+  route       Json?
+  eta         String?
+  riskLevel   String        @default("low")
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  history     ShipHistory[]
+  alerts      Alert[]
+  directives  Directive[]
+  distress    DistressMessage[]
+}
+
+model ShipHistory {
+  id        String   @id @default(uuid())
+  shipId    String
+  ship      Ship     @relation(fields: [shipId], references: [shipId])
+  lat       Float
+  lng       Float
+  speed     Float
+  heading   Float
+  fuel      Float
+  status    String
+  timestamp DateTime @default(now())
+
+  @@index([shipId, timestamp])
+}
+
+model Alert {
+  id              String   @id @default(uuid())
+  type            String
+  priority        String
+  shipId          String?
+  ship            Ship?    @relation(fields: [shipId], references: [shipId])
+  title           String
+  message         String
+  acknowledged    Boolean  @default(false)
+  acknowledgedBy  String?
+  acknowledgedByUser User? @relation("AcknowledgedAlerts", fields: [acknowledgedBy], references: [id])
+  lat             Float?
+  lng             Float?
+  metadata        Json?
+  createdAt       DateTime @default(now())
+
+  @@index([type, createdAt])
+  @@index([shipId])
+}
+
+model RestrictedZone {
+  id        String   @id @default(uuid())
+  name      String
+  polygon   Json
+  severity  String   @default("danger")
+  active    Boolean  @default(true)
+  createdBy String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Directive {
+  id        String   @id @default(uuid())
+  shipId    String
+  ship      Ship     @relation(fields: [shipId], references: [shipId])
+  issuedBy  String
+  issuer    User     @relation(fields: [issuedBy], references: [id])
+  type      String
+  message   String
+  status    String   @default("pending")
+  metadata  Json?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([shipId])
+}
+
+model DistressMessage {
+  id         String   @id @default(uuid())
+  shipId     String
+  ship       Ship     @relation(fields: [shipId], references: [shipId])
+  message    String
+  lat        Float
+  lng        Float
+  aiAnalysis Json?
+  createdAt  DateTime @default(now())
+
+  @@index([shipId, createdAt])
+}
+
+model WeatherSnapshot {
+  id          String   @id @default(uuid())
+  lat         Float
+  lng         Float
+  temperature Float
+  windSpeed   Float
+  windDir     Float
+  waveHeight  Float
+  weatherCode Int
+  severity    String
+  description String
+  fetchedAt   DateTime @default(now())
+
+  @@index([fetchedAt])
+}
+
+model PlaybackSnapshot {
+  id        String   @id @default(uuid())
+  data      Json
+  timestamp DateTime @default(now())
+
+  @@index([timestamp])
+}

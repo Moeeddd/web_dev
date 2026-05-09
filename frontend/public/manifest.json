@@ -1,0 +1,9 @@
+{
+  "name": "Horizon Command",
+  "short_name": "HorizonCMD",
+  "description": "Maritime Crisis Operations Platform",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#020b1a",
+  "theme_color": "#06b6d4"
+}
