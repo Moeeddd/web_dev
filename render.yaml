@@ -5,12 +5,6 @@ databases:
     plan: free
 
 services:
-  - type: pserv
-    name: maritime-redis
-    env: docker
-    rootDir: redis
-    plan: free
-
   - type: web
     name: maritime-backend
     env: docker
@@ -23,7 +17,7 @@ services:
           name: maritime-postgres
           property: connectionString
       - key: REDIS_URL
-        value: redis://maritime-redis:6379
+        value: redis://localhost:6379
       - key: JWT_SECRET
         generateValue: true
       - key: OPENAI_API_KEY

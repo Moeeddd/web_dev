@@ -2,8 +2,8 @@ FROM node:20-alpine
 
 WORKDIR /app
 
-# Install dependencies and openssl for Prisma
-RUN apk add --no-cache openssl
+# Install dependencies, openssl for Prisma, and Redis
+RUN apk add --no-cache openssl redis
 COPY package.json package-lock.json* ./
 RUN npm ci --omit=dev
 
@@ -20,5 +20,5 @@ RUN npx tsc --outDir dist
 
 EXPOSE 4000
 
-# Run migrations, seed, and start
-CMD sh -c "npx prisma db push --skip-generate; node dist/prisma/seed.js; node dist/src/index.js"
+# Start redis in the background, run migrations, seed, and start
+CMD sh -c "redis-server --daemonize yes && npx prisma db push --skip-generate && node dist/prisma/seed.js && node dist/src/index.js"
