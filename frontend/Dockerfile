@@ -8,8 +8,8 @@ RUN npm install
 COPY . .
 
 ENV NEXT_TELEMETRY_DISABLED=1
-ENV NEXT_PUBLIC_API_URL=http://localhost/api
-ENV NEXT_PUBLIC_WS_URL=http://localhost
+ENV NEXT_PUBLIC_API_URL=/api
+ENV NEXT_PUBLIC_WS_URL=
 
 RUN npm run build
 
