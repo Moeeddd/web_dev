@@ -12,18 +12,22 @@ export default function Home() {
   const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
-    // Restore session from localStorage
-    const savedToken = localStorage.getItem('horizon_token');
-    const savedUser = localStorage.getItem('horizon_user');
-    if (savedToken && savedUser) {
-      try {
+    try {
+      // Restore session from localStorage
+      const savedToken = localStorage.getItem('horizon_token');
+      const savedUser = localStorage.getItem('horizon_user');
+      if (savedToken && savedUser) {
         setAuth(JSON.parse(savedUser), savedToken);
-      } catch {
+      }
+    } catch (e) {
+      console.warn('Failed to restore session:', e);
+      try {
         localStorage.removeItem('horizon_token');
         localStorage.removeItem('horizon_user');
-      }
+      } catch (err) {}
+    } finally {
+      setHydrated(true);
     }
-    setHydrated(true);
   }, [setAuth]);
 
   if (!hydrated) {
